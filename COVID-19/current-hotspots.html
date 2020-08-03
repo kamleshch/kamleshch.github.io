@@ -2,14 +2,15 @@
 <html>
 <meta charset="utf-8">
 <link href="css/StyleSheet.css" rel="stylesheet">
+<title>Current COVID-19 hotspots</title>
 <!-- load the d3.js library -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <head><h1><center>Global COVID-19 outbreak</center></h1></head>
 <body>
-    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 663,100 people have died; more than 10.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
+    <p>There are many countries where the COVID-19 cases are in uptrend. I included the top 4, which can be considered as hotspots, to show the data here. The below line chart shows how the cases have increased over time in the current hotspots. 
     </p>
     <p>
-    A moving average/rolling average/running average is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. A moving average is commonly used with time series data to smooth out short-term fluctuations and highlight longer-term trends or cycles. The threshold between short-term and long-term depends on the application, and the parameters of the moving average will be set accordingly. Viewed simplistically it can be regarded as smoothing the data.
+    Many governments have considered locking down the country to keep the people safe and make sure the hospitals are not overloaded. Lockdowns have proven to be effective as the number of new cases during the time are very low when compared to the places where there is no lockdown. As an example, India was on lockdown during the months of April and May and this can be observed in the line chart, as the number of cases during the lockdown are very low compared to when there is no lockdown.
     </p>
     <form action="index.html" style="float: right">
         <input type="submit" value="Start Over"/>
@@ -43,7 +44,7 @@
                 "translate(" + margin.left + "," + margin.top + ")");
 
         // Get the data
-        d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Countries_Increasing_072520.csv").then(function(data) {
+        d3.csv("https://raw.githubusercontent.com/kamleshch/kamleshch.github.io/master/COVID-19/data/Current_Hotspots.csv").then(function(data) {
             console.log(data);
 
             // format the data
@@ -170,17 +171,14 @@
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Daily confirmed cases");
-
-
-            //Annotations
-
             
-
+            
+            
             // Add mark line    
              svg
                 .append("line")
-                .attr("x1", width * 3/20)
-                .attr("x2", width * 3/20)
+                .attr("x1", width * 7/20)
+                .attr("x2", width * 7/20)
                 .attr("y1", 0)
                 .attr("y2", height)
                 .attr("stroke-dasharray", "6")
@@ -190,8 +188,8 @@
             // Add mark line    
              svg
                 .append("line")
-                .attr("x1", width * 10/20)
-                .attr("x2", width * 10/20)
+                .attr("x1", width * 13/20)
+                .attr("x2", width * 13/20)
                 .attr("y1", 0)
                 .attr("y2", height)
                 .attr("stroke-dasharray", "6")
@@ -200,14 +198,15 @@
             
             svg
                 .append("text")
-                .attr("x", 100)
+                .attr("x", 210)
                 .attr("y", 50)
                 .transition()
                 .style("fill", "green")
                 .style("font-size", "14px")
                 .style("font-weight", "bold")
-                .text("Text")
+                .text("On avg. few countries opted for full/partial lockdown during this time")
                 .style("width", "10");
+            
             
 
         });
@@ -216,6 +215,10 @@
 
 <footer>
   <p>Author: Kamlesh Chegondi<br>
-  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a><br>
+    References: <a href="https://www.nytimes.com/interactive/2020/world/coronavirus-maps.html#map">NY Times</a>
+    <a href="https://www.bbc.com/news/world-51235105">BBC</a>
+    <a href="https://coronavirus.jhu.edu/data/new-cases">JHU</a>
+    <a href="https://www.d3-graph-gallery.com/">D3.JS gallery</a></p>
 </footer>
 </html>
