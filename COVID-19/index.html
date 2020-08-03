@@ -39,7 +39,7 @@ var svg = d3.select("svg"),
 
 // Load external data and boot
     
-    data = d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Countries_Latest_072520.csv",function(data) {
+    data = d3.csv("data/Countries_Latest_072520.csv",function(data) {
         var path = d3.geoPath();
         //add div for tooltip
         var Tooltip = d3.select("#kc_dataviz")
