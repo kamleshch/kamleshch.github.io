@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link href="css/StyleSheet.css" rel="stylesheet">
+<!-- load the d3.js library -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<head><h1><center>Global COVID-19 outbreak</center></h1></head>
+<body>
+    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 663,100 people have died; more than 10.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
+    </p>
+    <p>
+    A moving average/rolling average/running average is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. A moving average is commonly used with time series data to smooth out short-term fluctuations and highlight longer-term trends or cycles. The threshold between short-term and long-term depends on the application, and the parameters of the moving average will be set accordingly. Viewed simplistically it can be regarded as smoothing the data.
+    </p>
+    <form action="index.html" style="float: right">
+        <input type="submit" value="Start Over"/>
+    </form>
+    <p><select id="selectButton"></select></p>
+
+    <script>
+        // set the dimensions and margins of the graph
+        var margin = {
+                top: 50,
+                right: 50,
+                bottom: 50,
+                left: 100
+            },
+            width = 900 - margin.left - margin.right,
+            height = 480 - margin.top - margin.bottom;
+
+        // set the ranges
+        var x = d3.scaleTime().range([0, width]);
+        var y = d3.scaleLinear().range([height, 0]);
+
+
+        // append the svg obgect to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // Get the data
+        d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Countries_Increasing_072520.csv").then(function(data) {
+            console.log(data);
+
+            // format the data
+            data.forEach(function(d) {
+                d.Vdate = new Date(d.Date);
+                d.Vtotopened = +d.Country;
+                d.Daily_New_Confirmed = +d.Daily_New_Confirmed;
+            });
+
+            // List of groups (here I have one group per column)
+            var allGroup = d3.map(data, function(d) {
+                return (d.Country)
+            }).keys().sort()
+            console.log(allGroup);
+            // add the options to the button
+            d3.select("#selectButton")
+                .selectAll('myOptions')
+                .data(allGroup)
+                .enter()
+                .append('option')
+                .text(function(d) {
+                    return d;
+                }) // text showed in the menu
+                .attr("value", function(d) {
+                    return d;
+                }) // corresponding value returned by the button
+
+
+            // Scale the range of the data
+            x.domain(d3.extent(data, function(d) {
+                return d.Vdate;
+            }));
+            y.domain(d3.extent(data, function(d) {
+                return d.Daily_New_Confirmed}));
+
+
+            // Add the X Axis
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+            // Add the Y Axis
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            console.log("before svg line");
+            // Initialize line with first group of the list
+            var line = svg
+                .append('g')
+                .append("path")
+                .datum(data.filter(function(d) {
+                    return d.Country == allGroup[0]
+                }))
+                .attr("d", d3.line()
+                    .x(function(d) {
+                        return x(d.Vdate)
+                    })
+                    .y(function(d) {
+                        return y(d.Daily_New_Confirmed)
+                    })
+                )
+                .attr("stroke", "black")
+                .style("stroke-width", 2)
+                .style("fill", "none")
+
+
+
+            // A function that update the chart
+            function update(selectedGroup) {
+
+                console.log("Is data filtering")
+                console.log(data);
+                console.log(selectedGroup);
+                // Create new data with the selection?
+                // Create new data with the selection?
+
+                // Create new data with the selection?
+                var dataFilter = data.filter(function(d) {
+                    return d.Country == selectedGroup
+                })
+                console.log(dataFilter);
+                console.log("I am happy")
+                // Give these new data to update line
+                line
+                    .datum(dataFilter)
+                    .transition()
+                    .duration(1000)
+                    .attr("d", d3.line()
+                        .x(function(d) {
+                            return x(d.Vdate)
+                        })
+                        .y(function(d) {
+                            return y(d.Daily_New_Confirmed)
+                        })
+                    )
+                    .attr("stroke", "black")
+            }
+
+
+            // When the button is changed, run the updateChart function
+            d3.select("#selectButton").on("change", function(d) {
+                // recover the option that has been chosen
+                var selectedOption = d3.select(this).property("value")
+                console.log("My selected option is");
+                console.log(selectedOption);
+                // run the updateChart function with this selected option
+                update(selectedOption)
+            })
+
+            // text label for the x axis
+            svg.append("text")
+                .attr("transform",
+                    "translate(" + (width / 2) + " ," +
+                    (height + margin.top - 10) + ")")
+                .style("text-anchor", "middle")
+                .text("Date");
+
+
+            // text label for the y axis
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left + 20)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Daily confirmed cases");
+
+
+            //Annotations
+
+            
+
+            // Add mark line    
+             svg
+                .append("line")
+                .attr("x1", width * 3/20)
+                .attr("x2", width * 3/20)
+                .attr("y1", 0)
+                .attr("y2", height)
+                .attr("stroke-dasharray", "6")
+                .style("stroke-width","3")
+                .attr("stroke", "green");
+           
+            // Add mark line    
+             svg
+                .append("line")
+                .attr("x1", width * 10/20)
+                .attr("x2", width * 10/20)
+                .attr("y1", 0)
+                .attr("y2", height)
+                .attr("stroke-dasharray", "6")
+                .style("stroke-width","3")
+                .attr("stroke", "green");
+            
+            svg
+                .append("text")
+                .attr("x", 100)
+                .attr("y", 50)
+                .transition()
+                .style("fill", "green")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("Text")
+                .style("width", "10");
+            
+
+        });
+    </script>
+</body>
+
+<footer>
+  <p>Author: Kamlesh Chegondi<br>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+</footer>
+</html>
