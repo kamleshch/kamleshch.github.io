@@ -82,7 +82,7 @@ var svg = d3.select("svg"),
                 lifeArray.push(parseInt(data[i].Confirmed))
                 
             }
-        json = d3.json("https://raw.githubusercontent.com/kamleshch/kamleshch.github.io/master/COVID-19/json/world.json",function(json){
+        json = d3.json("json/world.json",function(json){
             for(j =0;j<json.features.length;j++)
                 {
                     
