@@ -53,7 +53,7 @@ var svg = d3.select("body").append("svg")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // get the data
-d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Global_Trend_072520.csv", 
+d3.csv("data/Global_Trend_072520.csv", 
 function (d) {
   return {
     Date: new Date(d.Date),
