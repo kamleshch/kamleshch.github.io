@@ -3,6 +3,7 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 <link href="css/StyleSheet.css" rel="stylesheet">
+<title>Global COVID-19 outbreak</title>
 <head><h1><center>Global COVID-19 outbreak</center></h1></head>
 <body>
     <p>COVID‑19/Coronavirus pandemic is an ongoing global pandemic caused by severe acute respiratory syndrome coronavirus 2 (SARS‑CoV‑2). The outbreak was first identified in December 2019 in Wuhan, China. The World Health Organization declared the outbreak a Public Health Emergency of International Concern on 30 January 2020 and a pandemic on 11 March. Below is a snapshot of the number of confirmed cases in the world and confirmed cases in each country.
@@ -22,13 +23,13 @@
 </table>
 <table style="width:100%">
     <tr>
-        <th style="text-align: right; color: red">As of July 25, 2020, 11:59 P.M. E.T.</th></tr>
+        <th style="text-align: right; color: red; font-size: 15px">As of July 25, 2020, 11:59 P.M. E.T.</th></tr>
 </table>
     
     <form action="new-cases-over-time.html" style="float: right">
         <input type="submit" value="Next"/>
     </form>
-<div id="div_template" style="background-color:white" width=900 height="850"></div>
+<div id="kc_dataviz" style="background-color:white" width=900 height="850"></div>
 
 <center><svg width="1000" height="600"></svg></center>
 <script>
@@ -41,13 +42,13 @@ var svg = d3.select("svg"),
     data = d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Countries_Latest_072520.csv",function(data) {
         var path = d3.geoPath();
         //add div for tooltip
-        var Tooltip = d3.select("#div_template")
-        .append("div").attr("width",400+"px")
+        var Tooltip = d3.select("#kc_dataviz")
+        .append("div").attr("width",40+"px")
         .style("opacity", 0)
         .style("background-color", "transparent").style("color","black").style("position", "relative").style("display","block")
 
         //add svg for the map
-        var svg = d3.select("#div_template")
+        var svg = d3.select("#kc_dataviz")
         .append("svg")
         .attr("height", height)
         .attr("width", width)
@@ -56,33 +57,33 @@ var svg = d3.select("svg"),
         
         var projection = d3.geoMercator()
         .scale(150)
-  .center([0,20])
-  .translate([width / 2, height / 2]);
+          .center([0,20])
+          .translate([width / 2, height / 2]);
           
-        var countryArray = [];
-        var lifeArray = [];
-        var countryId = [];
+        var countryData = [];
+        var confirmCount = [];
         var k =0
-        countryArray.push(data[0].Country)
-        lifeArray.push(parseInt(data[0].Confirmed))
+        countryData.push(data[0].Country)
+        confirmCount.push(parseInt(data[0].Confirmed))
         
         //get data from csv file and add to the json opject
         l = data.length
         for(var i =1;i<l - 2;)
             {
                 var Country = data[i].Country
+                
                 while(i<l -2 && Country == data[i].Country)
                     {
-                        var pop_no = parseInt(data[i].Confirmed)
-                        lifeArray[k] = lifeArray[k] + pop_no
+                        //var pop_no = parseInt(data[i].Confirmed)
+                        confirmCount[k] = parseInt(data[i].Confirmed)
                         i++
                     }
                 k ++;
-                countryArray.push(data[i].Country)
-                lifeArray.push(parseInt(data[i].Confirmed))
+                countryData.push(data[i].Country)
+                confirmCount.push(parseInt(data[i].Confirmed))
                 
             }
-        json = d3.json("json/world.json",function(json){
+        json = d3.json("https://raw.githubusercontent.com/kamleshch/kamleshch.github.io/master/COVID-19/json/world.json",function(json){
             for(j =0;j<json.features.length;j++)
                 {
                     
@@ -90,14 +91,14 @@ var svg = d3.select("svg"),
                     
                 }
 
-            for(i =0 ; i<countryArray.length;i++)
+            for(i =0 ; i<countryData.length;i++)
             {
                 for(j =0;j<json.features.length;j++)
                 {
                     
-                    if(countryArray[i] == json.features[j].properties.name)
+                    if(countryData[i] == json.features[j].properties.name)
                     {
-                        json.features[j].Confirmed = lifeArray[i]
+                        json.features[j].Confirmed = confirmCount[i]
                         break
                     }
                     
@@ -134,20 +135,17 @@ var svg = d3.select("svg"),
                           Confirmed = "N/A"  
                       } 
                   Tooltip
-                      .html("<p>Country:"+d.properties.name+"<br>Confirmed:"+Confirmed+"</p>")
+                      .html("<p>Country:"+d.properties.name+"<br>Confirmed cases:"+Confirmed+"</p>")
                       .style("left",(d3.mouse(this)[0])+"px")
                       .style("top", (d3.mouse(this)[1])+"px")
                   
               }
             // Draw the map
-            min = d3.min(lifeArray)
-            max = d3.max(lifeArray) / 16
+            min = d3.min(confirmCount)
+            max = d3.max(confirmCount) / 6
 
-            maxcol = "#FF1414"
-            mincol="#FFEBEB"
             var colorScale = d3.scaleLinear()
             .domain([0,max])
-            //.range([mincol,maxcol]);
             .range(["lightyellow","red"]);
             svg.selectAll("path")
                 .data(json.features)
@@ -165,49 +163,24 @@ var svg = d3.select("svg"),
                 .on("mouseover", mouseOver)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseLeave)
-             y = d3.scaleLinear().domain([0,max]).range([0,140]);
+             //y = d3.scaleLinear().domain([0,max]).range([0,140]);
 
-           var defs = svg.append("defs");
+   
+            var defs = svg.append("defs");
             
             var linearGradient = defs.append("linearGradient")
     .attr("id", "linear-gradient");
             
-            //Horizontal gradient
-linearGradient
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "100%")
-    .attr("y2", "0%")
-                        linearGradient.append("stop")
-   .attr('class', 'start')
-   .attr("offset", "0%")
-   .attr("stop-color", "white")
-   .attr("stop-opacity", 1);
-            
-            linearGradient.append("stop")
-   .attr('class', 'end')
-   .attr("offset", "100%")
-   .attr("stop-color", maxcol)
-   .attr("stop-opacity", 1);
-            d3.select("svg").append("rect").attr("x",20).attr("y",10).attr("width",140).attr("height",10).attr("fill","url(#linear-gradient)")
-            d3.select("svg").append("g").attr("transform","translate(20,20)").call(d3.axisBottom(y)).attr("stroke","white").attr("fill","white")
+            //Legend
+            lheight = 450
+            lwidth = 120
 
-       // });
-        
-        legend_height = 550
-legend_width = 130
-
-   
-    // Linear scale for y-axis
-  //  const yScale = d3.scale.Linear().domain([0, max]).range([legend_height, 0]);
-
-//Create SVG element and append map to the SVG
-var k_svg = d3.select("#my_dataviz")
-.append("svg")
-.attr("width", legend_width)
-.attr("height", legend_height)
-.attr("class", "legend")
-      .attr("transform", "translate(180,-20)");
+   var k_svg = d3.select("#kc_dataviz")
+    .append("svg")
+    .attr("width", lwidth)
+    .attr("height", lheight)
+    .attr("class", "legend")
+   .attr("transform", "translate(180,-20)");
 
 var legend = k_svg.append("defs")
            .append("svg:linearGradient")
@@ -229,12 +202,12 @@ var legend = k_svg.append("defs")
                 .attr("stop-opacity", 1);
 
 k_svg.append("rect")
-.attr("width", legend_width-100)
-.attr("height", legend_height/2)
+.attr("width", lwidth-100)
+.attr("height", lheight/2)
 .style("fill", "url(#gradient)")
 .attr("transform", "translate(55,0)");
 
-            var y = d3.scaleLinear().range([legend_height/2, 0]).domain([0, max]);
+            var y = d3.scaleLinear().range([lheight/2, 0]).domain([0, max]);
 
             var yAxis = d3.axisRight(y);
 
@@ -249,6 +222,10 @@ k_svg.append("rect")
     </body>
 <footer>
   <p>Author: Kamlesh Chegondi<br>
-  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a><br>
+    References: <a href="https://www.nytimes.com/interactive/2020/world/coronavirus-maps.html#map">NY Times</a>
+    <a href="https://www.bbc.com/news/world-51235105">BBC</a>
+    <a href="https://coronavirus.jhu.edu/data/new-cases">JHU</a>
+    <a href="https://www.d3-graph-gallery.com/">D3.JS gallery</a></p>
 </footer>
 </html>
