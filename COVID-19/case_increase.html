@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<link href="StyleSheet.css" rel="stylesheet">
+<head><h1><center>Global COVID-19 outbreak</center></h1></head>
+<body>
+    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 663,100 people have died; more than 10.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
+    </p>
+    <p>
+    A moving average/rolling average/running average is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. A moving average is commonly used with time series data to smooth out short-term fluctuations and highlight longer-term trends or cycles. The threshold between short-term and long-term depends on the application, and the parameters of the moving average will be set accordingly. Viewed simplistically it can be regarded as smoothing the data.
+    </p>
+    <form action="increase_countries.html" style="float: right">
+        <input type="submit" value="Next"/>
+    </form>
+<svg width="400" height="300"></svg>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz2" style="color:rgba(236,241,175,0.09);padding:10px;border: 5px"></div>
+<div id='container'></div>
+<script>
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 20, bottom: 30, left: 70},
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the area
+var area = d3.area()
+    .x(function(d) { return x(d.Date); })
+    .y0(height)
+    .y1(function(d) { return y(d.Cumm_Confirmed); });
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) { return x(d.Date); })
+    .y(function(d) { return y(d.Cumm_Confirmed); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// get the data
+d3.csv("https://raw.githubusercontent.com/kamleshch/COVID-19/master/data/Global_Trend_072520.csv", 
+function (d) {
+  return {
+    Date: new Date(d.Date),
+    Cumm_Confirmed: +d.Cumm_Confirmed         // convert string to number
+  };
+},
+
+function(data) {
+
+  // scale the range of the data
+  x.domain(d3.extent(data, function(d) { return new Date(d.Date); }));
+  y.domain([0, d3.max(data, function(d) { return d.Cumm_Confirmed; })]);
+
+
+        svg.append("line")
+                        .attr("x1", 0)
+                        .attr("x2", width)
+                        .attr("y1", y(1000000))
+                        .attr("y2", y(1000000))
+                        .style("stroke", "black");
+
+            svg.append("line")
+                        .attr("x1", 0)
+                        .attr("x2", width)
+                        .attr("y1", y(5000000))
+                        .attr("y2", y(5000000))
+                        .style("stroke", "black");
+    
+                svg.append("line")
+                        .attr("x1", 0)
+                        .attr("x2", width)
+                        .attr("y1", y(10000000))
+                        .attr("y2", y(10000000))
+                        .style("stroke", "black");
+    
+                    svg.append("line")
+                        .attr("x1", 0)
+                        .attr("x2", width)
+                        .attr("y1", y(15000000))
+                        .attr("y2", y(15000000))
+                        .style("stroke", "black");
+    
+    // add the area
+    svg.append("path")
+       .data([data])
+       .attr("class", "area")
+       .attr("d", area);
+
+  // add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+    
+  // add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+
+});
+
+</script>
+</body>
+<footer>
+  <p>Author: Kamlesh Chegondi<br>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+</footer>
+</html>
