@@ -4,9 +4,10 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 <link href="css/StyleSheet.css" rel="stylesheet">
+<title>New COVID-19 cases over time</title>
 <head><h1><center>Global COVID-19 outbreak</center></h1></head>
 <body>
-    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 663,100 people have died; more than 10.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
+    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 643,100 people have died; more than 9.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
     </p>
     <p>
     A moving average/rolling average/running average is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. A moving average is commonly used with time series data to smooth out short-term fluctuations and highlight longer-term trends or cycles. The threshold between short-term and long-term depends on the application, and the parameters of the moving average will be set accordingly. Viewed simplistically it can be regarded as smoothing the data.
@@ -16,14 +17,14 @@
     </form>
 <svg width="400" height="300"></svg>
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz2" style="color:rgba(236,241,175,0.09);padding:10px;border: 5px"></div>
+<div id="kc_dataviz" style="color:rgba(236,241,175,0.09);padding:10px;border: 5px"></div>
 <div id='container'></div>
 <script>
 var margin1 = {top: 50, right: 30, bottom: 80, left: 60},
         width1 = 1200 - margin1.left - margin1.right,
         height1 = 400 - margin1.top - margin1.bottom;
     // append the svg object to the body of the page
-    var svg2 = d3.select("#my_dataviz2")
+    var svg2 = d3.select("#kc_dataviz")
         .append("svg")
         .attr("width", width1 + margin1.left + margin1.right)
         .attr("height", height1 + margin1.top + margin1.bottom)
@@ -179,6 +180,10 @@ var margin1 = {top: 50, right: 30, bottom: 80, left: 60},
 </body>
 <footer>
   <p>Author: Kamlesh Chegondi<br>
-  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a><br>
+    References: <a href="https://www.nytimes.com/interactive/2020/world/coronavirus-maps.html#map">NY Times</a>
+    <a href="https://www.bbc.com/news/world-51235105">BBC</a>
+    <a href="https://coronavirus.jhu.edu/data/new-cases">JHU</a>
+    <a href="https://www.d3-graph-gallery.com/">D3.JS gallery</a></p>
 </footer>
 </html>
