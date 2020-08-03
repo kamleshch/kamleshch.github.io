@@ -3,20 +3,23 @@
 <meta charset="utf-8">
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
+<title>Cummulative cases over time</title>
 <link href="css/StyleSheet.css" rel="stylesheet">
 <head><h1><center>Global COVID-19 outbreak</center></h1></head>
 <body>
-    <p>According to official counts, Coronavirus pandemic has sickened more than 16,835,200 people. As of 25-Jul-2020, at least 663,100 people have died; more than 10.2 million people have recovered and the virus has been reported in more than 188 countries and territories, as these maps show below
+    <p>This virus has spread like a wildfire since it began in December 2019. Various countries opted for a full/partial lockdown for few days. Though the lockdown proved effective in few countries, after the lockdown the number of cases have increased significantly.
     </p>
     <p>
-    A moving average/rolling average/running average is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. A moving average is commonly used with time series data to smooth out short-term fluctuations and highlight longer-term trends or cycles. The threshold between short-term and long-term depends on the application, and the parameters of the moving average will be set accordingly. Viewed simplistically it can be regarded as smoothing the data.
+    Number of confirmed cases reached 1 million after 100 days since the first cases was reported in China. 2 million cases mark was reached in just 13 days after 1 million cases were reported. 5 million cases mark was hit in 50 days after 1 million cases were reported. This area chart shows on how the number of cases have exploded over time.
     </p>
+    <br>
+    <br>
     <form action="current-hotspots.html" style="float: right">
         <input type="submit" value="Next"/>
     </form>
 <svg width="400" height="300"></svg>
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz2" style="color:rgba(236,241,175,0.09);padding:10px;border: 5px"></div>
+<div id="kc_dataviz" style="color:rgba(236,241,175,0.09);padding:10px;border: 5px"></div>
 <div id='container'></div>
 <script>
 // set the dimensions and margins of the graph
@@ -92,6 +95,51 @@ function(data) {
                         .attr("y1", y(15000000))
                         .attr("y2", y(15000000))
                         .style("stroke", "black");
+
+    svg
+                .append("text")
+                .attr("x", 0)
+                .attr("y", 20)
+                .transition()
+                .style("fill", "green")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("15 million cases - 24 days to go from 10 to 15 million")
+                .style("width", "10");
+    
+    svg
+                .append("text")
+                .attr("x", 0)
+                .attr("y", y(10000000)-10)
+                .transition()
+                .style("fill", "green")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("10 million cases - 38 days to go from 5 to 10 million")
+                .style("width", "10");
+    
+    svg
+                .append("text")
+                .attr("x", 0)
+                .attr("y", y(5000000)-10)
+                .transition()
+                .style("fill", "green")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("5 million cases - 13 days to go from 1 to 5 million")
+                .style("width", "10");
+    
+    
+        svg
+                .append("text")
+                .attr("x", 0)
+                .attr("y", y(1000000)-10)
+                .transition()
+                .style("fill", "green")
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("1 million cases - 100 days to go from 0 to 1 million")
+                .style("width", "10");
     
     // add the area
     svg.append("path")
@@ -117,6 +165,10 @@ function(data) {
 </body>
 <footer>
   <p>Author: Kamlesh Chegondi<br>
-  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a></p>
+  <a href="mailto:kamlesh2@illinois.edu">kamlesh2@illinois.edu</a><br>
+    References: <a href="https://www.nytimes.com/interactive/2020/world/coronavirus-maps.html#map">NY Times</a>
+    <a href="https://www.bbc.com/news/world-51235105">BBC</a>
+    <a href="https://coronavirus.jhu.edu/data/new-cases">JHU</a>
+    <a href="https://www.d3-graph-gallery.com/">D3.JS gallery</a></p>
 </footer>
 </html>
